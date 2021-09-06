@@ -36,16 +36,13 @@ var fight = function(enemyName) {
         playerName + ' attacked ' + enemyName + '. ' + enemyName + ' now has ' + enemyHealth + ' health remaining.'
       );
 
-      // // if player choses to fight, then fight
-      //   if (promptFight === "fight" || promptFight === "FIGHT" || promtFight === "Fight") {   
-      //   // remove enemy's health by subtracting the amount set in the playerAttack variable
-      //   enemyHealth = enemyHealth - playerAttack;
-
       // check enemy's health
       if (enemyHealth <= 0) {
         window.alert(enemyName + " has died!");
+
       // award player money for winning
       playerMoney = playerMoney + 20;
+
       //leave while() loop since enemy is dead
       break;
       } else {
@@ -69,7 +66,7 @@ var fight = function(enemyName) {
       }
     };
 
-// functino to start a new game
+// function to start a new game
 var startGame = function() {
     // reset player stats
     playerHealth = 100;
@@ -91,8 +88,19 @@ var startGame = function() {
 
       // pass the pickedEnemyName variable's value into the fight function, where it will assume he value of the enemyName parameter
       fight(pickedEnemyName);
+
+      // if we're not at the last enemy in the array
+      if (playerHealth > 0 && i < enemyNames.length -1) {
+        // ask if player wants to use the store before next round
+        var storeConfirm = window.confirm("The fight is over, visit the store before teh next round?");
+
+        // if yes, take them to the store() function
+        if (storeConfirm) {
+          shop();
+        }
+      }
     }
-    // if player isn't alive, stop the game
+    // if player isn't alive, break out of the loop and let the endGame function run
     else {
       window.alert('You have lost your robot in battle! Game Over!');
       break;
@@ -122,6 +130,56 @@ var endGame = function() {
     window.alert("Thank you for playing Robot Gladiators! Come back soon!");
   }
 };
+
+// function for the player to purchase perks in exchange for lowering their score
+var shop = function() {
+  // ask the player what they'd like to do
+  var shopOptionsPrompt = window.prompt("Would you like to refill your health, upgrade your attack, or leave the store? Please enter REFILL, UPGRADE or Leave");
+
+// use switch case to carry out action
+switch (shopOptionsPrompt) {
+  case 'REFILL': case 'refill': case 'Refill':
+    if (playerMoney >= 7) {
+      window.alert("Refilling the player's health by $20 for $7");
+
+      //increase health and decrease money
+      playerHealth = playerHealth + 20;
+      playerMoney = playerMoney - 7;
+    }
+    else {
+      window.alert("You don't have enough money!");
+    }
+      break;
+
+    case 'UPGRADE': case 'upgrade': case 'Upgrade':
+    if (playerMoney >= 7) {
+      window.alert("Upgrading player's attack by $6 for $7");
+
+      // increase attack and decrease money
+      playerAttack = playerAttack + 6;
+      playerMoney = playerMoney - 7;
+    }
+    else {
+      window.alert("You don't have enough money!");
+    }
+      break;
+    
+    case 'LEAVE': case 'leave': case 'Leave':
+      window.alert("Leaving the store.");
+
+      // do nothing, so function will end
+      break;
+
+    default:
+      window.alert("You did not pick a valid option. Try again.");
+
+      // call shop() again to force player to pick a valid option
+      shop();
+      break;
+  }
+};
+
+
 
 
 // start the game when the page loads
